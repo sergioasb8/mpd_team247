@@ -1,7 +1,8 @@
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
-from app import app
+from flask import current_app
+
 #Create data description
 data_description={
     'column_name':['full_text','user','location','date','tweet_id','number_rt','number_likes','id_key_word'],
@@ -57,7 +58,7 @@ layout = html.Div([
     ])
 
 
-@app.callback(Output('dataset_details_md', 'children'),
+@current_app.callback(Output('dataset_details_md', 'children'),
               Output('feedback_dataset', 'children'),
               Input('dataset_selection', 'value'))
 
