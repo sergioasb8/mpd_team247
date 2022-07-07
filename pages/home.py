@@ -29,8 +29,10 @@ layout =html.Div([
                     dbc.Col([
                         html.Div([
                             html.A([
-                                html.Img(src='assets/profile/repo.png', style={'width': '100%', 'height': '100%'}),
-                            ],href='https://github.com/GDLPLearning/Sentiment-Analysis-for-the-MDP',target='_blank'),
+                                html.Img(src='assets/profile/repo.jpg', 
+                                    style={'width': '100%', 'height': '100%'}),
+                            ],
+                            href='https://github.com/GDLPLearning/Sentiment-Analysis-for-the-MDP',target='_blank'),
                         ], style={'textAlign': 'center'}),
                     ],lg=10),
                     dbc.Col([]),
@@ -47,7 +49,8 @@ layout =html.Div([
                     dbc.Col([
                         html.Div([
                             html.A([
-                                html.Img(src='https://api.iconify.design/entypo-social/youtube.svg', style={'width': '150px','height': '150px'}),
+                                html.Img(src='https://api.iconify.design/entypo-social/youtube.svg', 
+                                    style={'width': '150px','height': '150px'}),
                             ]),
                         ],style={'text-align': 'center'}),
                     ],lg=10),
@@ -64,7 +67,7 @@ layout =html.Div([
                     dbc.Col([
                         html.Div([
                             html.A([
-                                html.Img(src='assets/images/datafolio.png', style={'width':'100%','height':'100%'}),
+                                html.Img(src='assets/images/datafolio.jpg', style={'width':'100%','height':'100%'}),
                             ]),
                         ],style={'text-align':'center'}),
                     ],lg=10),
