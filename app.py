@@ -2,7 +2,7 @@ from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import os
 # parts of the app
-from pages import home
+from pages import home, overview
 
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)
@@ -77,6 +77,8 @@ app.layout = html.Div([
 def render_page_content(pathname):
     if pathname == "/":
         return home.layout
+    elif pathname == "/overview":
+        return overview.layout
     else:
         return f'You have selected'
 
