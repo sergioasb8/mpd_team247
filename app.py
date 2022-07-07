@@ -77,7 +77,9 @@ app.layout = html.Div([
 def render_page_content(pathname):
     if pathname == "/":
         return home.layout
-    return f'You have selected'
+    else:
+        return f'You have selected'
 
+# condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
