@@ -72,7 +72,7 @@ app.layout = html.Div([
 
 # realizando el callback
 @app.callback(Output('page-content', 'children'),
-                [Input('url', 'value')])
+                [Input('url', 'pathname')])
 
 def render_page_content(pathname):
     if pathname == "/":
