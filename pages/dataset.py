@@ -1,6 +1,5 @@
-from dash import Dash, dcc, html, Input, Output
+from dash import dcc, html
 import dash_bootstrap_components as dbc
-import pandas as pd
 
 #Create data description
 data_description={
@@ -8,7 +7,6 @@ data_description={
     #'data_type':['string','string','string','datetime','int','int','int','int'],
     'description':['full text of the tweet','username who posted the tweet','location where the tweet was post','time when the tweet was post','primary key, number id of the tweet','number of retweets of the tweet','number of likes of the tweet','foreign key with the id that represent the key word']
     }
-df_description=pd.DataFrame(data_description)
 
 
 p = f"""
