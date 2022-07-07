@@ -1,7 +1,8 @@
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import os
-
+# parts of the app
+from pages import home
 
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)
@@ -69,10 +70,14 @@ app.layout = html.Div([
     dcc.Location(id="url"), sidebar, content
 ])
 
-@app.callback(Output('display-value', 'children'),
-                [Input('dropdown', 'value')])
-def display_value(value):
-    return f'You have selected {value}'
+# realizando el callback
+@app.callback(Output('page-content', 'children'),
+                [Input('url', 'value')])
+
+def render_page_content(pathname):
+    if pathname == "/":
+        return home.layout
+    return f'You have selected'
 
 if __name__ == '__main__':
     app.run_server(debug=True)
