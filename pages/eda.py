@@ -1,4 +1,5 @@
 from dash import Dash, dcc, html, Input, Output
+import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly 
 import plotly.express as px
@@ -185,3 +186,317 @@ def make_empty_fig():
     fig.layout.paper_bgcolor = '#FFFFFF'
     fig.layout.plot_bgcolor = '#FFFFFF'
     return fig
+
+
+layout = html.Div([
+################ Section Title ############################
+
+    dbc.Col([
+        html.Br(),
+        html.H1('Exploratory Data Analisis - EDA'),
+        ], style={'textAlign': 'center'}),
+    html.Br(), html.Br(),
+        html.P(p1),
+
+############### Tabs #############################
+
+    dbc.Tabs([
+
+############### EDA: Tweets 2019 (Tab 1) #################
+
+############### Data understanding I #################
+        
+        dbc.Tab([
+            dbc.Col([
+                html.Br(),
+                html.H2('Data understanding I'),
+        ], style={'textAlign': 'center'}),
+            html.Br(),
+            html.Br(),
+            html.P(p2),
+            html.Br(),
+
+############### Distribution of tweet text length #################
+
+            dbc.CardHeader(html.H3('Distribution of tweet text length')),
+            html.Br(),
+            html.P(p3),
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Graph(id='chars_freq_hist')
+                        ]),
+                ], lg=6),
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Graph(id='words_freq_hist')
+                        ]),                 
+                ], lg=6),
+        ]),
+            html.Br(),
+            html.Div([
+                dbc.Alert(f"Please select the number of bins before generating the graphs, otherwise the default will be used.",
+                         color='info',
+                         fade=True,
+                         is_open=True,
+                         dismissable=True,)
+                ],
+
+                id='feedback_1'),
+            dbc.Row([
+                dbc.Col(lg=1),
+                dbc.Col([
+                    dbc.Label('Modify number of bins:'),
+                    dcc.Slider(id='hist_bins_slider', 
+                       dots=True, min=0, max=100, step=5, included=False,
+                       marks={x: str(x) for x in range(0, 105, 5)}),
+                ], lg=10),
+                dbc.Col(lg=1),
+            ]),
+            html.Br(),
+            html.Div([
+                dbc.Button("Generate Graphs", outline=True, color="primary", className="me-1", size="sm", id="button1"),
+                ],  className="d-grid gap-2 col-6 mx-auto"),      
+            html.Br(),
+            html.P(p4),
+
+############### Explore the text content of the tweet #################
+            html.Br(),html.Br(),
+            dbc.CardHeader(html.H3('Explore the text content of the tweets')),
+            html.Br(),
+            html.P(p5),
+            html.Br(),
+            dcc.Loading([
+                dcc.Markdown(id='display_tweet_md',
+                             style={'backgroundColor': '#FFFFFF', 'border': '2px solid powderblue', 'padding': '30px'}),
+            ]),
+            html.Br(),
+            html.Div([
+                dbc.Alert(f"Click the buton to generate a random tweet, each time you press it a new tweet is generated.",
+                         color='info',
+                         fade=True,
+                         is_open=True,
+                         dismissable=True,)
+                ],
+                id='feedback_2'), 
+            html.Br(),
+            html.Div([
+                dbc.Button("Generate a random tweet", outline=True, color="primary", className="me-1", size="sm", id="button2"),
+                ], className="d-grid gap-2 col-6 mx-auto"),
+            html.Br(), html.Br(),
+            html.P(p6_1),html.P(p6_2),html.P(p6_3),html.P(p6_4),
+
+
+############### Words frequency #################
+            html.Br(),html.Br(),
+            dbc.CardHeader(html.H3('Words frequency')),
+            html.Br(),
+            html.P(p7),
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Graph(id='freq_words', figure=rep_words())
+                        ]),
+                    ], lg=6),
+                dbc.Col([
+                    dcc.Loading([
+                        html.Div([
+                            html.Img(src='assets/images/wc_text.jpg')
+                        ]),
+                    ]),
+
+                ], lg=3),
+
+            ]),
+            html.Br(), html.Br(),
+            html.P(p8),
+
+
+
+        ],label='EDA: Tweets 2019'),
+
+############### Medellin Development Plan (Tab 2) #################
+
+        dbc.Tab([
+            dbc.Col([
+                    html.Br(),
+                    html.H2('Text Analysis'),
+            ], style={'textAlign': 'center'}),
+            html.Br(),
+            html.Br(),
+            html.P(p9),
+            html.Br(),
+            dbc.CardHeader(html.H3('Wordclouds by "Linea Estrategica"')),
+            html.P('Explicacion de esta sección'),
+            html.Br(),
+            dcc.Dropdown(id='lineas_estrategicas',
+                         placeholder='Select one "Linea Estrategica"',
+                         options=[{'label':linea, 'value':i}
+                                  for linea ,i in lineas_estrategicas.items()]),
+            html.Br(),
+            html.Div([
+                dbc.Alert(f"Select a value from the dropdown to generate a short description and its word cloud.",
+                         color='info',
+                         fade=True,
+                         is_open=True,
+                         dismissable=True,)
+                ],
+                id='feedback_wc_mdp'),
+            html.Br(), 
+            html.Div([
+                dbc.Button("Generate Wordclouds", outline=True, color="primary", className="me-1", size="sm", id="button_lestr"),
+                ],  className="d-grid gap-2 col-6 mx-auto"),
+            html.Br(),html.Br(),
+            dbc.Row([
+                dbc.Col(),
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Markdown(id='mdp_details_md',
+                                     style={'backgroundColor': '#FFFFFF', 'border': '2px solid powderblue', 'padding': '10px'}),
+                        ]),
+                    ]),
+                dbc.Col([
+                    dcc.Loading([
+                    html.Div([
+                    html.Img(id='word_cloud_linea')]),
+                ]),
+                    ]),
+                dbc.Col(),
+                ]),
+            
+
+        ], label='Medellin Development Plan'),
+
+
+
+############### EDA: Tweets keywords 2019 - 2022 (Tab 3) #################
+
+############### Data understanding II #################
+
+        dbc.Tab([
+            dbc.Col([
+                html.Br(),
+                html.H2('Data understanding II'),
+        ], style={'textAlign': 'center'}),
+            html.Br(),
+            html.Br(),
+            html.P(p10),
+            html.Br(),
+
+############### Distribution of tweet text length #################
+
+            dbc.CardHeader(html.H3('Distribution of tweet text length')),
+            html.Br(),
+            html.P(p11),
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Label('Years:'),
+                    dcc.Dropdown(id='hist_year_dropdown_2022',
+                                 multi=True,
+                                 placeholder='Select one or more years',
+                                 options=[{'label': year, 'value': year} for year in df2['year'].drop_duplicates().sort_values()]),
+                    ]),
+                dbc.Col([
+                    dbc.Label('Keyword:'),
+                    dcc.Dropdown(id='keyword_selector_20221',
+                                 placeholder='Select one keyword',
+                                 options=[{'label':keyword.title(), 'value':keyword}
+                                          for keyword in df2['key_word'].drop_duplicates().sort_values()]),
+                ]),
+                ]),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Graph(id='chars_freq_hist_2022')
+                        ]),
+                ], lg=6),
+                dbc.Col([
+                    dcc.Loading([
+                        dcc.Graph(id='words_freq_hist_2022')
+                        ]),                 
+                ], lg=6),
+        ]),
+            html.Br(),
+            html.Div([
+                dbc.Alert(f"Please select the number of bins, year(s) and keyword before generating the charts.",
+                         color='info',
+                         fade=True,
+                         is_open=True,
+                         dismissable=True,)
+                ],id='feedback_1_2022'),
+            dbc.Row([
+                dbc.Col(lg=1),
+                dbc.Col([
+                    dbc.Label('Modify number of bins:'),
+                    dcc.Slider(id='hist_bins_slider_2022',
+                       dots=True, min=0, max=100, step=5, included=False,
+                       marks={x: str(x) for x in range(0, 105, 5)}),
+                ], lg=10),
+                dbc.Col(lg=1),
+            ]),
+            html.Br(),
+            html.Div([
+                dbc.Button("Generate Graphs", outline=True, color="primary", className="me-1", size="sm", id="button1_2022"),
+                ],  className="d-grid gap-2 col-6 mx-auto"),      
+            html.Br(),
+            html.P(p12),
+
+############### Explore the text content of the tweet #################
+
+            html.Br(),html.Br(),
+            dbc.CardHeader(html.H3('Explore the text content of the tweets')),
+            html.Br(),
+            html.P(p13),
+            html.Br(), 
+            dbc.Label('Keyword:'),
+            dcc.Dropdown(id='keyword_selector_20222',
+                         placeholder='Select one keyword',
+                         value='cultura',
+                         options=[{'label':keyword.title(), 'value':keyword}
+                                   for keyword in df2['key_word'].drop_duplicates().sort_values()]),
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Label('Year:'),
+                    dcc.Slider(id='years_random_tweet_slider_2022',
+                       dots=True, min=2019, max=2022, step=1, included=False, value=2019,
+                       marks={x: str(x) for x in range(2019, 2023, 1)}),
+                    ]),
+                dbc.Col([
+                    dbc.Label('Month:'),
+                    dcc.Dropdown(id='month_selector_2022',
+                         placeholder='Select one month', value=1,
+                         options=[{'label':month, 'value':i}
+                                   for i, month in months.items()]),
+                    ]),
+
+
+                ]),
+            html.Br(),
+            dcc.Loading([
+                dcc.Markdown(id='display_tweet_text_2022_md',
+                             style={'backgroundColor': '#FFFFFF', 'border': '2px solid powderblue', 'padding': '30px'}),
+            ]),
+            html.Br(),
+            html.Div([
+                dbc.Alert(f"Select a value for keyword, year and month, otherwise the default value will be selected, then press the button to generate a random tweet, every time you press it a new random tweet will be generated.",
+                         color='info',
+                         fade=True,
+                         is_open=True,
+                         dismissable=True,)
+                ],id='feedback_2_2022'),
+            html.Br(),
+            html.Div([
+                dbc.Button("Generate a random tweet", outline=True, color="primary", className="me-1", size="sm", id="button2_2022"),
+                ], className="d-grid gap-2 col-6 mx-auto"),
+            html.Br(),html.Br(),
+            html.P(p14),           
+
+
+        ],label='EDA: Tweets keywords 2019 - 2022'),
+        
+        ]),
+    ])
