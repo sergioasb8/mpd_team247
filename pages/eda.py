@@ -1,20 +1,33 @@
 from dash import Dash, dcc, html, Input, Output
+from datetime import datetime 
 import dash_bootstrap_components as dbc
+import csv
 import pandas as pd
 import plotly 
 import plotly.express as px
 import plotly.graph_objects as go
 
-df = pd.read_csv('pages/data/2019.csv')
-df['num_chars'] = df['full_text'].str.len()
-df['num_words'] = df['full_text'].str.split().str.len()
+# Reading csv 2019.csv
+path_2019csv = 'pages/data/2019.csv'
+df = {'full_text':[],'num_chars':[],'num_words':[]
+}
+with open(path_2019csv) as csvFile:
+    csvReader = csv.DictReader(csvFile, encoding="utf-8-sig")
+    for rows in csvReader:
+        df['full_text'].append(rows['full_text'])
+        df['num_chars'].append(len(rows['full_text']))
+        df['num_words'].append(len(rows['full_text'].split()))
 
-df2 = pd.read_csv('pages/data/tweets.csv')
-df2['weekday'] = pd.to_datetime(df2['date']).dt.weekday
-df2['year'] = pd.to_datetime(df2['date']).dt.year
-df2['month'] = pd.to_datetime(df2['date']).dt.month
-df2['num_chars'] = df2['full_text'].str.len()
-df2['num_words'] = df2['full_text'].str.split().str.len()
+# Read Tweets csv
+path_tweetscsv = 'pages/data/tweets.csv'
+df2 = {'key_word':[],'year':[],'month':[]}
+with open(path_tweetscsv) as csvFile:
+    csvReader = csv.DictReader(csvFile, encoding="utf-8-sig")
+    for rows in csvReader:
+        df2['key_word'].append(rows['key_word'])
+        current_date = df['date'][0]
+        df2['year'].append(int(current_date[:4]))
+        df2['month'].append(int(current_date[5:7]))
 
 months = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May',
           6:'June', 7:'July', 8:'August', 9:'September', 10:'October',
@@ -28,12 +41,15 @@ lineas_estrategicas = {'Medellin Development Plan': 1,
                        'Línea estratégica 5: Gobernanza y Gobernabilidad': 6,
                        }
 
-
-df3 = df2['year'].value_counts().sort_index().to_frame().reset_index()
-fig = px.pie(df3,values='year',names='index', 
-    title=f'Pie chart - Tweets distribution by year.')
-
-df_words = pd.read_csv('pages/data/word_fre_2019.csv')
+# savign the csv in df_words
+csvFilePath = 'pages/data/word_fre_2019.csv'
+df_words = {'word':[],'frequency':[]}
+with open(csvFilePath, encoding="utf-8-sig") as csvFile:
+  csvReader = csv.DictReader(csvFile)
+  for rows in csvReader:
+    df_words['word'].append(rows['word'])
+    df_words['frequency'].append(rows['frequency'])
+# df_words = pd.read_csv('pages/data/word_fre_2019.csv')
 
 def rep_words():
     fig = px.bar(df_words.head(35).sort_values(by='frequency'), 
@@ -256,7 +272,12 @@ layout = html.Div([
             ]),
             html.Br(),
             html.Div([
-                dbc.Button("Generate Graphs", outline=True, color="primary", className="me-1", size="sm", id="button1"),
+                dbc.Button("Generate Graphs",
+                outline=True,
+                color="primary",
+                className="me-1",
+                size="sm",
+                id="button1"),
                 ],  className="d-grid gap-2 col-6 mx-auto"),      
             html.Br(),
             html.P(p4),
@@ -282,7 +303,11 @@ layout = html.Div([
                 id='feedback_2'), 
             html.Br(),
             html.Div([
-                dbc.Button("Generate a random tweet", outline=True, color="primary", className="me-1", size="sm", id="button2"),
+                dbc.Button("Generate a random tweet",
+                outline=True,
+                color="primary",
+                className="me-1",
+                size="sm", id="button2"),
                 ], className="d-grid gap-2 col-6 mx-auto"),
             html.Br(), html.Br(),
             html.P(p6_1),html.P(p6_2),html.P(p6_3),html.P(p6_4),
@@ -346,7 +371,11 @@ layout = html.Div([
                 id='feedback_wc_mdp'),
             html.Br(), 
             html.Div([
-                dbc.Button("Generate Wordclouds", outline=True, color="primary", className="me-1", size="sm", id="button_lestr"),
+                dbc.Button("Generate Wordclouds",
+                outline=True,
+                color="primary",
+                className="me-1",
+                size="sm", id="button_lestr"),
                 ],  className="d-grid gap-2 col-6 mx-auto"),
             html.Br(),html.Br(),
             dbc.Row([
@@ -397,14 +426,15 @@ layout = html.Div([
                     dcc.Dropdown(id='hist_year_dropdown_2022',
                                  multi=True,
                                  placeholder='Select one or more years',
-                                 options=[{'label': year, 'value': year} for year in df2['year'].drop_duplicates().sort_values()]),
+                                 options=[{'label': year, 'value': year} for year in [2019,2020,2021,2022]]),
                     ]),
                 dbc.Col([
                     dbc.Label('Keyword:'),
                     dcc.Dropdown(id='keyword_selector_20221',
                                  placeholder='Select one keyword',
                                  options=[{'label':keyword.title(), 'value':keyword}
-                                          for keyword in df2['key_word'].drop_duplicates().sort_values()]),
+                                          for keyword in ['cultura','empresa','jovenes','metro','movilidad',
+                                                            'seguridad','tecnologia','trabajo','vida']]),
                 ]),
                 ]),
             dbc.Row([
@@ -439,7 +469,12 @@ layout = html.Div([
             ]),
             html.Br(),
             html.Div([
-                dbc.Button("Generate Graphs", outline=True, color="primary", className="me-1", size="sm", id="button1_2022"),
+                dbc.Button("Generate Graphs",
+                outline=True,
+                color="primary",
+                className="me-1",
+                size="sm",
+                id="button1_2022"),
                 ],  className="d-grid gap-2 col-6 mx-auto"),      
             html.Br(),
             html.P(p12),
@@ -456,7 +491,8 @@ layout = html.Div([
                          placeholder='Select one keyword',
                          value='cultura',
                          options=[{'label':keyword.title(), 'value':keyword}
-                                   for keyword in df2['key_word'].drop_duplicates().sort_values()]),
+                                   for keyword in ['cultura','empresa','jovenes','metro','movilidad',
+                                                    'seguridad','tecnologia','trabajo','vida']]),
             html.Br(),
             dbc.Row([
                 dbc.Col([
@@ -490,7 +526,11 @@ layout = html.Div([
                 ],id='feedback_2_2022'),
             html.Br(),
             html.Div([
-                dbc.Button("Generate a random tweet", outline=True, color="primary", className="me-1", size="sm", id="button2_2022"),
+                dbc.Button("Generate a random tweet",
+                outline=True,
+                color="primary",
+                className="me-1",
+                size="sm", id="button2_2022"),
                 ], className="d-grid gap-2 col-6 mx-auto"),
             html.Br(),html.Br()   
 
