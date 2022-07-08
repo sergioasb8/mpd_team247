@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 import os
 # parts of the app
-from pages import home, overview, contact, dataset
+from pages import home, overview, contact, dataset, eda
 
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)
@@ -81,6 +81,8 @@ def render_page_content(pathname):
         return overview.layout
     elif pathname == "/dataset":
         return dataset.layout
+    elif pathname == "/EDA":
+        return eda.layout
     elif pathname == "/contact-us":
         return contact.layout
     else:
@@ -91,7 +93,6 @@ def render_page_content(pathname):
 @app.callback(Output('dataset_details_md', 'children'),
               Output('feedback_dataset', 'children'),
               Input('dataset_selection', 'value'))
-
 def dataset_info_display(dataset):
     if (not dataset):
         raise PreventUpdate
