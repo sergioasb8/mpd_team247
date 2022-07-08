@@ -336,7 +336,78 @@ def gen_random_tweet(nclicks):
     return markdown, message
 
 
-    
+# Medellin Development Plan (Tab 2) 
+@app.callback(Output('feedback_wc_mdp', 'children'),
+              Output('mdp_details_md','children'),
+              Output('word_cloud_linea','src'),
+              Input('button_lestr', 'n_clicks'),
+              State('lineas_estrategicas', 'value'))
+
+def word_cloud_lin(nclicks, linea):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not linea):
+        raise PreventUpdate
+
+    for k, v in eda.lineas_estrategicas.items():
+        if v == linea:
+            seleccion = k
+    message = dbc.Alert(f"You have selected - {seleccion}.",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True)
+    if linea == 1:
+        markdown = f"""
+
+        Likewise, within PDM document there is a chapter called “Líneas Estratégicas” which establishes the different strategic lines of action that encompass the proposals of the government plan and its execution in relation to the most important issues for the city future. Therefore, it was performed a text analysis in order to obtain the most relevant words (the words with higher frequency in the text) for each PDM strategic line by word clouds. You can observe each word cloud for each strategic line selecting the interest option in the given list.
+
+
+        """
+        return message, markdown, 'assets/images/wc_pdm.jpg'
+    elif linea == 2:
+        markdown = f"""
+
+        The first strategic line seeks to create a digital culture and economic reactivation that will improve the quality of life of the population of Medellin through the management of new opportunities, education, entrepreneurship and job creation in areas associated with the digital economy and the fourth industrial revolution. This objective is closely associ- ated with the words ”life”, ”culture” and ”technology”
+
+
+        """
+        return message, markdown, 'assets/images/wcl1.jpg'
+    elif linea == 3:
+        markdown = f"""
+
+        The second strategic line seeks to articulate the city with cultural projects that strengthen the creative potential of citizens, safeguarding their heritage and memories, making Medellin a more supportive and peaceful city. It also contains programs focused on youth, gender equality, education, arts, and science. This makes it easy to explain the frequency of the
+keywords.
+
+
+        """
+        return message, markdown, 'assets/images/wcl2.jpg'
+    elif linea == 4:
+        markdown = f"""
+
+        Line strategy 3 focuses on the citizens of Medellin, in promoting, creating and guaranteeing basic and cultural living conditions, in order to have the ability to enhance their human and individual talents. Likewise, it promotes the generation of social, community, healthy, creative, safe and sustainable environments. In addition, in this line there are programs established for youth from public health to the so-called ”Valle del Software”.
+
+
+        """
+        return message, markdown, 'assets/images/wcl3.jpg'
+    elif linea == 5:
+        markdown = f"""
+
+        The fourth strategic line seeks to move Medellin towards a future of sustainability, in which dignified habitability is guaranteed for its inhabitants and functional and harmonious integration with rural areas. In this line, programs for sustainable and intelligent mobility are highlighted in which include clean energies and cultural transformations, focusing on the conservation of all forms of life.
+
+
+        """               
+        return message, markdown, 'assets/images/wcl4.jpg'
+    elif linea == 6:
+        markdown = f"""
+
+        The last line strategy aims to reinforce the synergy between government and citizenship, an open dialogue from the different knowledge, the consensus between the different actors and the collective construction of the citizen territorial peace process. Victims and justice are one of the components of this line, as well as security in terms of citizen coexistence and cybersecurity.
+
+
+        """
+        return message, markdown, 'assets/images/wcl5.jpg'
+
 # condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
