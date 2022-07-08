@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import os
 # parts of the app
-from pages import home, overview, contact, dataset
+from pages import home, overview, contact, dataset, eda
 
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)

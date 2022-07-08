@@ -1,33 +1,14 @@
 from dash import Dash, dcc, html, Input, Output
 from datetime import datetime 
 import dash_bootstrap_components as dbc
-import csv
 import pandas as pd
 import plotly 
 import plotly.express as px
 import plotly.graph_objects as go
 
 # Reading csv 2019.csv
-path_2019csv = 'pages/data/2019.csv'
-df = {'full_text':[],'num_chars':[],'num_words':[]
-}
-with open(path_2019csv) as csvFile:
-    csvReader = csv.DictReader(csvFile, encoding="utf-8-sig")
-    for rows in csvReader:
-        df['full_text'].append(rows['full_text'])
-        df['num_chars'].append(len(rows['full_text']))
-        df['num_words'].append(len(rows['full_text'].split()))
-
-# Read Tweets csv
-path_tweetscsv = 'pages/data/tweets.csv'
-df2 = {'key_word':[],'year':[],'month':[]}
-with open(path_tweetscsv) as csvFile:
-    csvReader = csv.DictReader(csvFile, encoding="utf-8-sig")
-    for rows in csvReader:
-        df2['key_word'].append(rows['key_word'])
-        current_date = df['date'][0]
-        df2['year'].append(int(current_date[:4]))
-        df2['month'].append(int(current_date[5:7]))
+df = pd.read_csv('pages/data/2019.csv')
+df2 = pd.read_csv('pages/data/tweets.csv')
 
 months = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May',
           6:'June', 7:'July', 8:'August', 9:'September', 10:'October',
@@ -41,15 +22,7 @@ lineas_estrategicas = {'Medellin Development Plan': 1,
                        'Línea estratégica 5: Gobernanza y Gobernabilidad': 6,
                        }
 
-# savign the csv in df_words
-csvFilePath = 'pages/data/word_fre_2019.csv'
-df_words = {'word':[],'frequency':[]}
-with open(csvFilePath, encoding="utf-8-sig") as csvFile:
-  csvReader = csv.DictReader(csvFile)
-  for rows in csvReader:
-    df_words['word'].append(rows['word'])
-    df_words['frequency'].append(rows['frequency'])
-# df_words = pd.read_csv('pages/data/word_fre_2019.csv')
+df_words = pd.read_csv('pages/data/word_fre_2019.csv')
 
 def rep_words():
     fig = px.bar(df_words.head(35).sort_values(by='frequency'), 
