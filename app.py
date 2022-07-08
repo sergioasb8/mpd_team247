@@ -360,53 +360,86 @@ def word_cloud_lin(nclicks, linea):
                         dismissable=True)
     if linea == 1:
         markdown = f"""
-
         Likewise, within PDM document there is a chapter called “Líneas Estratégicas” which establishes the different strategic lines of action that encompass the proposals of the government plan and its execution in relation to the most important issues for the city future. Therefore, it was performed a text analysis in order to obtain the most relevant words (the words with higher frequency in the text) for each PDM strategic line by word clouds. You can observe each word cloud for each strategic line selecting the interest option in the given list.
-
-
         """
         return message, markdown, 'assets/images/wc_pdm.jpg'
     elif linea == 2:
         markdown = f"""
-
         The first strategic line seeks to create a digital culture and economic reactivation that will improve the quality of life of the population of Medellin through the management of new opportunities, education, entrepreneurship and job creation in areas associated with the digital economy and the fourth industrial revolution. This objective is closely associ- ated with the words ”life”, ”culture” and ”technology”
-
-
         """
         return message, markdown, 'assets/images/wcl1.jpg'
     elif linea == 3:
         markdown = f"""
-
         The second strategic line seeks to articulate the city with cultural projects that strengthen the creative potential of citizens, safeguarding their heritage and memories, making Medellin a more supportive and peaceful city. It also contains programs focused on youth, gender equality, education, arts, and science. This makes it easy to explain the frequency of the
 keywords.
-
-
         """
         return message, markdown, 'assets/images/wcl2.jpg'
     elif linea == 4:
         markdown = f"""
-
         Line strategy 3 focuses on the citizens of Medellin, in promoting, creating and guaranteeing basic and cultural living conditions, in order to have the ability to enhance their human and individual talents. Likewise, it promotes the generation of social, community, healthy, creative, safe and sustainable environments. In addition, in this line there are programs established for youth from public health to the so-called ”Valle del Software”.
-
-
         """
         return message, markdown, 'assets/images/wcl3.jpg'
     elif linea == 5:
         markdown = f"""
-
         The fourth strategic line seeks to move Medellin towards a future of sustainability, in which dignified habitability is guaranteed for its inhabitants and functional and harmonious integration with rural areas. In this line, programs for sustainable and intelligent mobility are highlighted in which include clean energies and cultural transformations, focusing on the conservation of all forms of life.
-
-
         """               
         return message, markdown, 'assets/images/wcl4.jpg'
     elif linea == 6:
         markdown = f"""
-
         The last line strategy aims to reinforce the synergy between government and citizenship, an open dialogue from the different knowledge, the consensus between the different actors and the collective construction of the citizen territorial peace process. Victims and justice are one of the components of this line, as well as security in terms of citizen coexistence and cybersecurity.
-
-
         """
         return message, markdown, 'assets/images/wcl5.jpg'
+
+# Data understanding II
+
+# Distribution of tweet text length
+@app.callback(Output('chars_freq_hist_2022', 'figure'),
+              Output('words_freq_hist_2022', 'figure'),
+              Output('feedback_1_2022', 'children'),
+              Input('button1_2022', 'n_clicks'),
+              State('hist_bins_slider_2022', 'value'),
+              State('hist_year_dropdown_2022', 'value'),
+              State('keyword_selector_20221', 'value'),
+              )
+def plot_freq_hist(nclicks, nbins, years, keyword):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not years) or (not keyword):
+        raise PreventUpdate
+
+    df = eda.df2[(eda.df2['year'].isin(years)) & (eda.df2['key_word'] == keyword)]
+    fig1 = px.histogram(df,
+                        x='num_chars',
+                        nbins=nbins,
+                        color_discrete_sequence=['#5BC0BE'],
+                        title=f'Histogram - Character tweets distribution by length.<br><b>{keyword.title()}</b> {years}',
+                        marginal="box",
+                        height=500,
+                        width=500,
+                        labels={'num_chars': 'Length of text in characters'})
+    fig1.layout.paper_bgcolor = '#FFFFFF'
+    fig1.layout.plot_bgcolor = '#FFFFFF'
+    fig1.update_layout(title_font_size=15)
+    fig2 = px.histogram(df,
+                        x='num_words',
+                        nbins=nbins,
+                        color_discrete_sequence=['#5BC0BE'],
+                        title=f'Histogram - Words tweets distribution by length.<br><b>{keyword.title()}</b> {years}',
+                        marginal="box",
+                        height=500,
+                        width=500,
+                        labels={'num_words': 'Length of text in words'})
+    fig2.layout.paper_bgcolor = '#FFFFFF'
+    fig2.layout.plot_bgcolor = '#FFFFFF'
+    fig2.update_layout(title_font_size=15)
+    message = dbc.Alert(f"The number of bins has been modified to: {nbins} bins.",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+    return fig1, fig2, message
+
 
 # condition to execute the app
 if __name__ == '__main__':
