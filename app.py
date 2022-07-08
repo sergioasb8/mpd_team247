@@ -392,55 +392,6 @@ keywords.
 
 # Data understanding II
 
-# Distribution of tweet text length
-@app.callback(Output('chars_freq_hist_2022', 'figure'),
-              Output('words_freq_hist_2022', 'figure'),
-              Output('feedback_1_2022', 'children'),
-              Input('button1_2022', 'n_clicks'),
-              State('hist_bins_slider_2022', 'value'),
-              State('hist_year_dropdown_2022', 'value'),
-              State('keyword_selector_20221', 'value'),
-              )
-def plot_freq_hist(nclicks, nbins, years, keyword):
-    if (not nclicks):
-        raise PreventUpdate
-    if (not years) or (not keyword):
-        raise PreventUpdate
-
-    df = eda.df2[(eda.df2['year'].isin(years)) & (eda.df2['key_word'] == keyword)]
-    fig1 = px.histogram(df,
-                        x='num_chars',
-                        nbins=nbins,
-                        color_discrete_sequence=['#5BC0BE'],
-                        title=f'Histogram - Character tweets distribution by length.<br><b>{keyword.title()}</b> {years}',
-                        marginal="box",
-                        height=500,
-                        width=500,
-                        labels={'num_chars': 'Length of text in characters'})
-    fig1.layout.paper_bgcolor = '#FFFFFF'
-    fig1.layout.plot_bgcolor = '#FFFFFF'
-    fig1.update_layout(title_font_size=15)
-    fig2 = px.histogram(df,
-                        x='num_words',
-                        nbins=nbins,
-                        color_discrete_sequence=['#5BC0BE'],
-                        title=f'Histogram - Words tweets distribution by length.<br><b>{keyword.title()}</b> {years}',
-                        marginal="box",
-                        height=500,
-                        width=500,
-                        labels={'num_words': 'Length of text in words'})
-    fig2.layout.paper_bgcolor = '#FFFFFF'
-    fig2.layout.plot_bgcolor = '#FFFFFF'
-    fig2.update_layout(title_font_size=15)
-    message = dbc.Alert(f"The number of bins has been modified to: {nbins} bins.",
-                        color='success',
-                        fade=True,
-                        is_open=True,
-                        duration=4000,
-                        dismissable=True,)
-    return fig1, fig2, message
-
-
 # condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
