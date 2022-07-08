@@ -316,7 +316,6 @@ def plot_freq_hist(nclicks, nbins):
                          dismissable=True,)
     return fig1, fig2, message
 
-
 ############### Explore the text content of the tweet #################
 @app.callback(Output('display_tweet_md', 'children'),
               Output('feedback_2', 'children'),
@@ -413,8 +412,6 @@ keywords.
 
         """
         return message, markdown, 'assets/images/wcl5.jpg'
-
-
 
 ############### Data understanding II #################
 

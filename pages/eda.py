@@ -492,8 +492,7 @@ layout = html.Div([
             html.Div([
                 dbc.Button("Generate a random tweet", outline=True, color="primary", className="me-1", size="sm", id="button2_2022"),
                 ], className="d-grid gap-2 col-6 mx-auto"),
-            html.Br(),html.Br(),
-            html.P(p14),           
+            html.Br(),html.Br()   
 
 
         ],label='EDA: Tweets keywords 2019 - 2022'),
