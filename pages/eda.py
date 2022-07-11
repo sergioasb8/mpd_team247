@@ -1,8 +1,6 @@
-from dash import Dash, dcc, html, Input, Output
-from datetime import datetime 
+from dash import dcc, html
 import dash_bootstrap_components as dbc
 import pandas as pd
-import plotly 
 import plotly.express as px
 import plotly.graph_objects as go
 
