@@ -446,31 +446,26 @@ def display_preprocees_text(nclicks, text):
     ###### Unify the case of the text: convert it to lowercase.
 
     {text1}
-    ----
 
 
     ###### Remove numbers.
 
     {text2}
-    ----
 
 
     ###### Remove punctuation marks and special characters
 
     {text3}
-    ----
 
 
     ###### Remove accents
 
     {text4}
-    ----
 
 
     ###### Remove stopwords
-    
+
     {text5}
-    ----
 
 
     """

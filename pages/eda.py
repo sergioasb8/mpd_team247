@@ -350,7 +350,6 @@ layout = html.Div([
                 ],  className="d-grid gap-2 col-6 mx-auto"),
             html.Br(),html.Br(),
             dbc.Row([
-                dbc.Col(),
                 dbc.Col([
                     dcc.Loading([
                         dcc.Markdown(id='mdp_details_md',
@@ -363,7 +362,6 @@ layout = html.Div([
                     html.Img(id='word_cloud_linea')]),
                 ]),
                     ]),
-                dbc.Col(),
                 ]),
             
 
