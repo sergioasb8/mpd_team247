@@ -439,32 +439,36 @@ def display_preprocees_text(nclicks, text):
     text4 = model.remove_accent(text3)
     text5 = model.remove_stopword(text4)
     markdown = f"""
-    ###### Raw Text
-    {text}
-    ----
+    ###### Raw Text 
 
+    {text} 
 
     ###### Unify the case of the text: convert it to lowercase.
+
     {text1}
     ----
 
 
     ###### Remove numbers.
+
     {text2}
     ----
 
 
     ###### Remove punctuation marks and special characters
+
     {text3}
     ----
 
 
     ###### Remove accents
+
     {text4}
     ----
 
 
     ###### Remove stopwords
+    
     {text5}
     ----
 
