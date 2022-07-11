@@ -272,6 +272,8 @@ def dataset_info_display(dataset):
 
     return markdown, message
 
+
+
 # eda callback
 
 # frequency histogram
@@ -393,6 +395,31 @@ keywords.
         return message, markdown, 'assets/images/wcl5.jpg'
 
 # Data understanding II
+
+
+
+# model callback
+# Generate a random tweet 
+@app.callback(Output('random_feedback', 'children'),
+              Output('textarea_preprocess', 'value'),
+              Input('button_random', 'n_clicks'),)
+
+def gen_random_tweet(nclicks):
+    if (not nclicks):
+        raise PreventUpdate
+    random_tweet = model.df['full_text'].sample().values[0]
+
+    message = dbc.Alert(f"Random tweet successfully generated.",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+
+    return message, random_tweet
+
+
+
 
 # condition to execute the app
 if __name__ == '__main__':
