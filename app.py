@@ -419,6 +419,53 @@ def gen_random_tweet(nclicks):
     return message, random_tweet
 
 
+# Tweet text preprocessing 
+@app.callback(Output('feedback_text_proc', 'children'),
+              Output('display_preprocess_tweet_text_md', 'children'),
+              Input('button1', 'n_clicks'),
+              State('textarea_preprocess', 'value'))
+
+def display_preprocees_text(nclicks, text):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not text):
+        raise PreventUpdate
+
+    # clean_text = model.clean_tweet(text)
+    text1 = model.text_to_lower(text)
+    text2 = model.remove_numbers(text1)
+    text3 = model.remove_punct(text2)
+    text4 = model.remove_accent(text3)
+    text5 = model.remove_stopword(text4)
+    markdown = f"""
+    ###### Raw Text
+    {text}
+    ----
+    ###### Unify the case of the text: convert it to lowercase.
+    {text1}
+    ----
+    ###### Remove numbers.
+    {text2}
+    ----
+    ###### Remove punctuation marks and special characters
+    {text3}
+    ----
+    ###### Remove accents
+    {text4}
+    ----
+    ###### Remove stopwords
+    {text5}
+    ----
+    """
+
+    message = dbc.Alert(f"The entered tweet has been successfully processed.",
+                        color='success',
+                         fade=True,
+                         is_open=True,
+                         duration=4000,
+                         dismissable=True,)
+
+    return message, markdown
 
 
 # condition to execute the app
