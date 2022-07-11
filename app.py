@@ -418,7 +418,6 @@ def gen_random_tweet(nclicks):
 
     return message, random_tweet
 
-
 # Tweet text preprocessing 
 @app.callback(Output('feedback_text_proc', 'children'),
               Output('display_preprocess_tweet_text_md', 'children'),
@@ -441,21 +440,33 @@ def display_preprocees_text(nclicks, text):
     ###### Raw Text
     {text}
     ----
+
+
     ###### Unify the case of the text: convert it to lowercase.
     {text1}
     ----
+
+
     ###### Remove numbers.
     {text2}
     ----
+
+
     ###### Remove punctuation marks and special characters
     {text3}
     ----
+
+
     ###### Remove accents
     {text4}
     ----
+
+
     ###### Remove stopwords
     {text5}
     ----
+
+
     """
 
     message = dbc.Alert(f"The entered tweet has been successfully processed.",
@@ -467,6 +478,33 @@ def display_preprocees_text(nclicks, text):
 
     return message, markdown
 
+# Tweet text classification
+@app.callback(Output('feedback_tw_clas', 'children'),
+              Output('display_tweet_sentiment_md', 'children'),
+              Input('button2', 'n_clicks'),
+              State('textarea_preprocess', 'value'))
+
+def gen_sentiment(nclicks, tweet):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not tweet):
+        raise PreventUpdate
+
+    sentiment = model.log_reg(tweet)
+    if sentiment:
+        markdown = f"Positive 😃✅"
+        sen = 'Positive'
+    else:
+        markdown = f"Negative 😡❌"
+        sen = 'Negative'
+
+    message = dbc.Alert(f"Your tweet has been classified as {sen} sentiment.",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+    return message, markdown
 
 # condition to execute the app
 if __name__ == '__main__':
