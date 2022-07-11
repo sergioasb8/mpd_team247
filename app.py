@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import os
 # parts of the app
-from pages import home, overview, contact, dataset, eda
+from pages import home, overview, contact, dataset, eda, model
 
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)
@@ -85,6 +85,8 @@ def render_page_content(pathname):
         return dataset.layout
     elif pathname == "/EDA":
         return eda.layout
+    elif pathname == "/model":
+        return model.layout
     elif pathname == "/contact-us":
         return contact.layout
     else:
