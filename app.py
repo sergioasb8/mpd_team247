@@ -401,6 +401,7 @@ keywords.
 
 
 # model callback
+
 # Generate a random tweet 
 @app.callback(Output('random_feedback', 'children'),
               Output('textarea_preprocess', 'value'),
@@ -507,6 +508,66 @@ def gen_sentiment(nclicks, tweet):
                         dismissable=True,)
     return message, markdown
 
+# report callback
+
+# Explore tweet text sentiment by keyword #####################
+@app.callback(Output('explore_feedback', 'children'),
+              Output('display_random_tweet_by_key_md', 'children'),
+              Input('button1', 'n_clicks'),
+              State('random_tweet_year_dropdown', 'value'),
+              State('random_tweet_month_dropdown', 'value'),
+              State('random_tweet_day_dropdown', 'value'),
+              State('random_tweet_keyword_dropdown', 'value'),
+              State('random_tweet_sentiment_dropdown', 'value'),)
+
+def gen_random_tweet(nclicks, year, month, day, keyword, sentiment):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not year) and (not month) and (not day) and (not keyword) and (not sentiment):
+        year = 2019
+        month = 12
+        day = 24
+        keyword = 9 
+        sentiment = 1 
+
+    df_filtered = report.df[(report.df['year'].eq(year)) 
+                            & (report.df['month'].eq(month)) 
+                            & (report.df['day'].eq(day)) 
+                            & (report.df['key_word'] == (keyword)) 
+                            & (report.df['sentiment'].eq(sentiment))]
+
+    try:
+        random_tweet = df_filtered[['full_text', 'predicted_probability']].sample()
+    except ValueError:
+        raise PreventUpdate
+    else:
+        tweet = random_tweet.iloc[0,0]
+        predict_prob = random_tweet.iloc[0,1]
+        if sentiment == 1:
+            p_value = 100 * (2 * predict_prob - 1)
+            name = 'Positive Probability'
+        elif sentiment == 0:
+            p_value = -100 * (2 * predict_prob - 1)
+            name = 'Negative Probability'
+
+        markdown = f""" 
+        **Tweet:** {tweet}
+
+        **Predicted Probability:** {predict_prob:.4f}
+
+        **{name}**: {p_value:.2f}% 
+        """
+
+        sentiments = {1: 'Positive', 0:'Negative'}
+    message = dbc.Alert(f"Random tweet generated successfully, you have chosen: {year} (year), {month} (month), {day} (day), {keywords.get(keyword)} (keyword) and {sentiments.get(sentiment)} (sentiment).",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+    return message, markdown
+
+    
 # condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
