@@ -2,6 +2,7 @@ from dash import Dash, dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 import plotly.express as px
+import pandas as pd
 import plotly.graph_objects as go
 import os
 # parts of the app
@@ -510,7 +511,7 @@ def gen_sentiment(nclicks, tweet):
 
 # report callback
 
-# Explore tweet text sentiment by keyword #####################
+# Explore tweet text sentiment by keyword 
 @app.callback(Output('explore_feedback', 'children'),
               Output('display_random_tweet_by_key_md', 'children'),
               Input('button1', 'n_clicks'),
@@ -567,7 +568,68 @@ def gen_random_tweet(nclicks, year, month, day, keyword, sentiment):
                         dismissable=True,)
     return message, markdown
 
+# Historical evolution of sentiment by keyword 
+@app.callback(Output('historical_alert', 'children'),
+              Output('hist_ev', 'figure'),
+              Input('button4', 'n_clicks'),
+              State('hist_slider', 'value'),
+              State('hist_keyword', 'value'))
+
+def plotly_month_keyword(nclicks, year ,keyword):
+    if (not nclicks):
+        raise PreventUpdate
+    if (not year) or (not keyword):
+        raise PreventUpdate
+
+    df_sent_freq=pd.DataFrame()
+    df_plot=report.df[(report.df['year']==year)]
+    for months in df_plot['month'].unique():
+        df_cross=pd.crosstab(df_plot[df_plot['month']==months]['key_word'],df_plot[df_plot['month']==months]['sentiment']).reset_index()
+        df_cross['total']=df_cross.sum(axis=1)
+        df_cross['month']=months
+        df_cross['porc_pos']=df_cross[1]/df_cross['total']
+        df_cross=df_cross[['month','key_word','porc_pos']]
+        df_sent_freq=pd.concat([df_sent_freq,df_cross])
+
+    df_sent_freq.reset_index(drop=True,inplace=True)
+    df_sent_freq=df_sent_freq.sort_values(by=['month','key_word'],ascending=True)
+    fig=px.line(df_sent_freq[df_sent_freq['key_word'].isin(keyword)], 
+        x='month', 
+        y='porc_pos',
+        color='key_word',
+        markers=True,
+        title=f'Month-to-month evolution of the rate of positive tweets by keyword [<b>{year}</b>].',
+        width=1000,
+        height=600,
+        color_discrete_sequence=px.colors.sequential.Turbo,
+        labels={'porc_pos': '% Rate Positive Tweets', 'month': 'Months'},)
+
+    newnames = {'1': 'Cultura', '2': 'Empresa', '3': 'Jovenes', '4': 'Metro', 
+                '5': 'Movilidad', '6': 'Seguridad', '7': 'Tecnologia', 
+                '8': 'Trabajo', '9': 'Vida'}
+    fig.for_each_trace(lambda t: t.update(name = newnames[t.name],
+                                      legendgroup = newnames[t.name],
+                                      hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
+                                     )
+                  )   
     
+    fig.layout.paper_bgcolor = '#FFFFFF'
+    fig.layout.plot_bgcolor = '#FFFFFF'
+    fig.update_layout(title_font_size=15)
+
+    names = ''
+    for word in keyword:
+        names += report.keywords.get(word) + ', '
+
+    message = dbc.Alert(f"The graph has been successfully generated, , you have chosen: {names} (keyword), {year} (year).",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+
+    return message, fig 
+
 # condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
