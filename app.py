@@ -643,7 +643,7 @@ def gen_wordcloud(nclicks, keyword):
     if (not keyword):
         raise PreventUpdate
 
-    message = dbc.Alert(f"The word clouds have been generated successfully, you have selected the keyword: {keywords.get(keyword)}.",
+    message = dbc.Alert(f"The word clouds have been generated successfully, you have selected the keyword: {report.keywords.get(keyword)}.",
                         color='success',
                         fade=True,
                         is_open=True,
@@ -668,6 +668,55 @@ def gen_wordcloud(nclicks, keyword):
         return 'assets/images/key_word_8.jpg'
     elif keyword == 9:
         return message,'assets/images/key_word_9.jpg'
+
+# Ratio of sentiment per keyword 
+@app.callback(Output('ratio_feedback', 'children'),
+              Output('ratio_graph', 'figure'),
+              Input('button5', 'n_clicks'),
+              State('ratio_year', 'value'),
+              State('ratio_keyword', 'value'))
+
+def freq_year(nclicks, year, keyword):
+
+    if (not nclicks):
+        raise PreventUpdate
+
+    if (not year) or (not keyword):
+        raise PreventUpdate
+
+    df_year=report.df[(report.df['year'].isin(year))]
+    df_count=df_year.groupby(['key_word','sentiment']).size().reset_index().rename(columns={0: 'frequency'})
+    df_count.replace({'sentiment': {0: 'Negative', 1: 'Positive'}}, inplace=True)
+    df_count=df_count[df_count['key_word'].isin(keyword)]
+    df_count.replace({'key_word':{1:'Cultura',2:'Empresa',3:'Jovenes',4:'Metro',5:'Movilidad',6:'Seguridad',7:'Tecnologia',8:'Trabajo',9:'Vida'}},inplace=True)
+    fig=px.bar(df_count,
+               x='key_word',
+               y='frequency',
+               color='sentiment',
+               title=f'Frequency of tweets by sentiment <b>{year}</b>',
+               barmode='group',
+               text_auto='.2s',
+               color_discrete_map={'Positive':'#5BC0BE', 'Negative':'#1C2541'},
+               width=1000,
+               height=600,
+               labels={'key_word':'Keywords'})
+    fig.update_traces(marker_line_width=1.5, opacity=0.7)
+    fig.update_layout(title_font_size=15)
+    fig.layout.paper_bgcolor = '#FFFFFF'
+    fig.layout.plot_bgcolor = '#FFFFFF'
+
+    names = ''
+    for word in keyword:
+        names += report.keywords.get(word) + ', '
+    message = dbc.Alert(f"The graph has been generated successfully, you have selected: {names} (keywords) and {year} (years).",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+
+    return message, fig
+
 
 # condition to execute the app
 if __name__ == '__main__':
