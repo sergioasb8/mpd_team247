@@ -4,11 +4,6 @@ import pandas as pd
 
 df = pd.read_csv('pages/data/historic_prediction_sentiment.csv')
 
-df['day'] = pd.to_datetime(df['date']).dt.day
-df['year'] = pd.to_datetime(df['date']).dt.year
-df['month'] = pd.to_datetime(df['date']).dt.month
-
-
 keywords = {1:'cultura', 2:'empresa', 3:'jovenes',
                  4:'metro', 5:'movilidad', 6:'seguridad',
                  7:'tecnologia', 8:'trabajo', 9:'vida'}
