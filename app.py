@@ -630,6 +630,45 @@ def plotly_month_keyword(nclicks, year ,keyword):
 
     return message, fig 
 
+# Word cloud by keyword and sentiment 
+@app.callback(Output('wc_alert', 'children'),
+              Output('word_cloud_keyword', 'src'),
+              Input('button3', 'n_clicks'),
+              State('word_cloud_sentiment_keyword_dropdown', 'value'))
+
+def gen_wordcloud(nclicks, keyword):
+
+    if (not nclicks):
+        raise PreventUpdate
+    if (not keyword):
+        raise PreventUpdate
+
+    message = dbc.Alert(f"The word clouds have been generated successfully, you have selected the keyword: {keywords.get(keyword)}.",
+                        color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+
+    if keyword == 1:
+        return message,'assets/images/key_word_1.jpg'
+    elif keyword == 2:
+        return message,'assets/images/key_word_2.jpg'
+    elif keyword == 3:
+        return message,'assets/images/key_word_3.jpg'
+    elif keyword == 4:
+        return message,'assets/images/key_word_4.jpg'
+    elif keyword == 5:
+        return message,'assets/images/key_word_5.jpg'
+    elif keyword == 6:
+        return message,'assets/images/key_word_6.jpg'
+    elif keyword == 7:
+        return message,'assets/images/key_word_7.jpg'
+    elif keyword == 8:
+        return 'assets/images/key_word_8.jpg'
+    elif keyword == 9:
+        return message,'assets/images/key_word_9.jpg'
+
 # condition to execute the app
 if __name__ == '__main__':
     app.run_server(debug=True)
