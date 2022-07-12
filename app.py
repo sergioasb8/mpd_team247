@@ -560,7 +560,7 @@ def gen_random_tweet(nclicks, year, month, day, keyword, sentiment):
         """
 
         sentiments = {1: 'Positive', 0:'Negative'}
-    message = dbc.Alert(f"Random tweet generated successfully, you have chosen: {year} (year), {month} (month), {day} (day), {keywords.get(keyword)} (keyword) and {sentiments.get(sentiment)} (sentiment).",
+    message = dbc.Alert(f"Random tweet generated successfully, you have chosen: {year} (year), {month} (month), {day} (day), {report.keywords.get(keyword)} (keyword) and {sentiments.get(sentiment)} (sentiment).",
                         color='success',
                         fade=True,
                         is_open=True,
