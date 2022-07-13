@@ -395,15 +395,15 @@ layout = html.Div([
                     dcc.Dropdown(id='hist_year_dropdown_2022',
                                  multi=True,
                                  placeholder='Select one or more years',
-                                 options=[{'label': year, 'value': year} for year in [2019,2020,2021,2022]]),
+                                 options=[{'label': year, 'value': year} 
+                                 for year in df2['year'].drop_duplicates().sort_values()]),
                     ]),
                 dbc.Col([
                     dbc.Label('Keyword:'),
                     dcc.Dropdown(id='keyword_selector_20221',
                                  placeholder='Select one keyword',
                                  options=[{'label':keyword.title(), 'value':keyword}
-                                          for keyword in ['cultura','empresa','jovenes','metro','movilidad',
-                                                            'seguridad','tecnologia','trabajo','vida']]),
+                                          for keyword in df2['key_word'].drop_duplicates().sort_values()]),
                 ]),
                 ]),
             dbc.Row([
