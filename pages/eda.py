@@ -395,8 +395,8 @@ layout = html.Div([
                     dcc.Dropdown(id='hist_year_dropdown_2022',
                                  multi=True,
                                  placeholder='Select one or more years',
-                                 options=[{'label': year, 'value': year} 
-                                 for year in df2['year'].drop_duplicates().sort_values()]),
+                                 options=[{'label': str(year), 'value': year} 
+                                 for year in [2019,2020,2021,2022]]),
                     ]),
                 dbc.Col([
                     dbc.Label('Keyword:'),
