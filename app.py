@@ -451,6 +451,32 @@ def plot_freq_hist(nclicks, nbins, years, keyword):
 
     return fig1, fig2, message
 
+# Explore the text content of the tweet 
+@app.callback(Output('display_tweet_text_2022_md', 'children'),
+              Output('feedback_2_2022', 'children'),
+              Input('button2_2022', 'n_clicks'),
+              State('keyword_selector_20222', 'value'),
+              State('years_random_tweet_slider_2022', 'value'),
+              State('month_selector_2022', 'value'))
+
+def gen_random_tweet_2022(nclicks, keyword, year, month):
+    if (not nclicks):
+        raise PreventUpdate
+
+    df = eda.df2[(eda.df2['key_word'] == keyword) & (eda.df2['year'].eq(year)) & (eda.df2['month'].eq(month))]
+
+    random_tweet = df['full_text'].sample().values[0]
+
+    markdown = f"{random_tweet}"
+
+    message = dbc.Alert(f"Random tweet generated successfully, you have chosen: {keyword} (keyword), {year} (year) and {month} (month).",
+                         color='success',
+                        fade=True,
+                        is_open=True,
+                        duration=4000,
+                        dismissable=True,)
+
+    return markdown, message
 
 # model callbacks
 
