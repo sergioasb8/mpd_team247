@@ -403,7 +403,8 @@ layout = html.Div([
                     dcc.Dropdown(id='keyword_selector_20221',
                                  placeholder='Select one keyword',
                                  options=[{'label':keyword.title(), 'value':keyword}
-                                          for keyword in df2['key_word'].drop_duplicates().sort_values()]),
+                                    for keyword in ['trabajo','tecnologia','vida','seguridad','empresa',
+                                           'cultura','metro','jovenes','movilidad']]),
                 ]),
                 ]),
             dbc.Row([
